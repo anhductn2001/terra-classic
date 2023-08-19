@@ -15,7 +15,6 @@ type Hooks struct {
 
 var _ types.StakingHooks = Hooks{}
 
-// Create new distribution hooks
 func NewHooks(k stakingkeeper.Keeper) Hooks {
 	return Hooks{k}
 }
