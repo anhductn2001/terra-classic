@@ -15,6 +15,7 @@ func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterInterface((*exported.VestingAccount)(nil), nil)
 	cdc.RegisterConcrete(&vestingtypes.BaseVestingAccount{}, "core/BaseVestingAccount", nil)
 	cdc.RegisterConcrete(&LazyGradedVestingAccount{}, "core/LazyGradedVestingAccount", nil)
+	cdc.RegisterConcrete(&vestingtypes.ContinuousVestingAccount{}, "cosmos-sdk/ContinuousVestingAccount", nil)
 }
 
 // RegisterInterfaces associates protoName with AccountI and VestingAccount
@@ -24,18 +25,21 @@ func RegisterInterfaces(registry codectypes.InterfaceRegistry) {
 		"cosmos.vesting.v1beta1.VestingAccount",
 		(*exported.VestingAccount)(nil),
 		&LazyGradedVestingAccount{},
+		&vestingtypes.ContinuousVestingAccount{},
 	)
 
 	registry.RegisterImplementations(
 		(*authtypes.AccountI)(nil),
 		&vestingtypes.BaseVestingAccount{},
 		&LazyGradedVestingAccount{},
+		&vestingtypes.ContinuousVestingAccount{},
 	)
 
 	registry.RegisterImplementations(
 		(*authtypes.GenesisAccount)(nil),
 		&vestingtypes.BaseVestingAccount{},
 		&LazyGradedVestingAccount{},
+		&vestingtypes.ContinuousVestingAccount{},
 	)
 }
 
