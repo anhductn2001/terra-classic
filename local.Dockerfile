@@ -1,5 +1,7 @@
 FROM golang:1.20 AS go-builder
 
+ARG BUILDPLATFORM
+
 # Install minimum necessary dependencies, build Cosmos SDK, remove packages
 RUN apt update
 RUN apt install -y curl git build-essential
@@ -11,14 +13,27 @@ COPY . /code/
 
 RUN LEDGER_ENABLED=false make build
 
-RUN cp /go/pkg/mod/github.com/classic-terra/wasmvm@v*/internal/api/libwasmvm.aarch64.so /lib/libwasmvm.aarch64.so
+RUN if [ ${BUILDPLATFORM} = "linux/amd64" ]; then \
+        WASMVM_URL="libwasmvm.x86_64.so"; \
+    elif [ ${BUILDPLATFORM} = "linux/arm64" ]; then \
+        WASMVM_URL="libwasmvm.aarch64.so"; \     
+    else \
+        echo "Unsupported Build Platfrom ${BUILDPLATFORM}"; \
+        exit 1; \
+    fi; \
+    cp /go/pkg/mod/github.com/classic-terra/wasmvm@v*/internal/api/${WASMVM_URL} /lib/${WASMVM_URL}
 
-FROM ubuntu:22.04
-
-WORKDIR /root
+FROM ubuntu:23.04
 
 COPY --from=go-builder /code/build/terrad /usr/local/bin/terrad
-COPY --from=go-builder /lib/libwasmvm.aarch64.so /lib/libwasmvm.aarch64.so
+COPY --from=go-builder /lib/${WASMVM_URL} /lib/${WASMVM_URL}
+
+RUN  apt-get update \
+  && apt-get install -y wget \
+  && rm -rf /var/lib/apt/lists/*
+  
+ENV HOME /terra
+WORKDIR $HOME
 
 # rest server
 EXPOSE 1317
