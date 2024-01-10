@@ -511,7 +511,7 @@ func (s *IntegrationTestSuite) runValidators(c *e2einit.Chain, portOffset int) {
 			Mounts: []string{
 				fmt.Sprintf("%s/:%s", val.ConfigDir(), terraHomePath),
 			},
-			Repository: "cosmos/terrad-e2e",
+			Repository: "terrad-e2e",
 		}
 
 		s.Require().NoError(exec.Command("chmod", "-R", "0777", val.ConfigDir()).Run()) //nolint:gosec // this is a test
@@ -706,14 +706,14 @@ func (s *IntegrationTestSuite) runIBCRelayer1() {
 				"3032/tcp": {{HostIP: "", HostPort: "3032"}},
 			},
 			Env: []string{
-				fmt.Sprintf("terra_A_E2E_CHAIN_ID=%s", s.chainA.ChainMeta.Id),
-				fmt.Sprintf("terra_B_E2E_CHAIN_ID=%s", s.chainB.ChainMeta.Id),
-				fmt.Sprintf("terra_A_E2E_VAL_MNEMONIC=%s", terraAVal.Mnemonic),
-				fmt.Sprintf("terra_B_E2E_VAL_MNEMONIC=%s", terraBVal.Mnemonic),
-				fmt.Sprintf("terra_A_E2E_RLY_MNEMONIC=%s", terraARly.Mnemonic),
-				fmt.Sprintf("terra_B_E2E_RLY_MNEMONIC=%s", terraBRly.Mnemonic),
-				fmt.Sprintf("terra_A_E2E_VAL_HOST=%s", s.valResources[s.chainA.ChainMeta.Id][0].Container.Name[1:]),
-				fmt.Sprintf("terra_B_E2E_VAL_HOST=%s", s.valResources[s.chainB.ChainMeta.Id][0].Container.Name[1:]),
+				fmt.Sprintf("TERRA_A_E2E_CHAIN_ID=%s", s.chainA.ChainMeta.Id),
+				fmt.Sprintf("TERRA_B_E2E_CHAIN_ID=%s", s.chainB.ChainMeta.Id),
+				fmt.Sprintf("TERRA_A_E2E_VAL_MNEMONIC=%s", terraAVal.Mnemonic),
+				fmt.Sprintf("TERRA_B_E2E_VAL_MNEMONIC=%s", terraBVal.Mnemonic),
+				fmt.Sprintf("TERRA_A_E2E_RLY_MNEMONIC=%s", terraARly.Mnemonic),
+				fmt.Sprintf("TERRA_B_E2E_RLY_MNEMONIC=%s", terraBRly.Mnemonic),
+				fmt.Sprintf("TERRA_A_E2E_VAL_HOST=%s", s.valResources[s.chainA.ChainMeta.Id][0].Container.Name[1:]),
+				fmt.Sprintf("TERRA_B_E2E_VAL_HOST=%s", s.valResources[s.chainB.ChainMeta.Id][0].Container.Name[1:]),
 			},
 			Entrypoint: []string{
 				"sh",
