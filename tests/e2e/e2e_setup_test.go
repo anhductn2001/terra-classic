@@ -48,7 +48,7 @@ const (
 	txCommand                             = "tx"
 	queryCommand                          = "query"
 	keysCommand                           = "keys"
-	terraHomePath                         = "/home/nonroot/.terra"
+	terraHomePath                         = "/root/.terra"
 	photonDenom                           = "photon"
 	ulunaDenom                            = "uluna"
 	stakeDenom                            = "stake"
