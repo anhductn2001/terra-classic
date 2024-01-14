@@ -16,7 +16,7 @@ RUN apt install -y vim
 WORKDIR /terra
 COPY . /terra
 
-RUN BUILD_TAGS=muslc LINK_STATICALLY=true E2E_SCRIPT_NAME=${E2E_SCRIPT_NAME} make build-e2e-script
+RUN LINK_STATICALLY=true E2E_SCRIPT_NAME=${E2E_SCRIPT_NAME} make build-e2e-script
 
 RUN if [ ${BUILDPLATFORM} = "linux/amd64" ]; then \
         WASMVM_URL="libwasmvm.x86_64.so"; \
@@ -35,7 +35,7 @@ FROM ubuntu:23.04
 # Args only last for a single build stage - renew
 ARG E2E_SCRIPT_NAME
 
-COPY --from=build /terra/build/${E2E_SCRIPT_NAME} /bin/${E2E_SCRIPT_NAME}
+COPY --from=go-builder /terra/build/${E2E_SCRIPT_NAME} /bin/${E2E_SCRIPT_NAME}
 COPY --from=go-builder /lib/${WASMVM_URL} /lib/${WASMVM_URL}
 
 ENV HOME /terra
